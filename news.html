@@ -16,10 +16,16 @@
       font-size: 17px;
       line-height: 1.7;
       background-color: #ffffff;
+      margin: 0;
     }
 
-    a { text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    a {
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
 
     .top-bar {
       border-bottom: 1px solid #e5e7eb;
@@ -36,7 +42,10 @@
       font-weight: 600;
       margin: 0;
     }
-    .site-name a { color: inherit; }
+
+    .site-name a {
+      color: inherit;
+    }
 
     .top-nav {
       list-style: none;
@@ -53,8 +62,8 @@
       margin: 0 auto;
     }
 
-    h1 {
-      font-size: 2.2rem;   /* nice big first line */
+    .page-title {
+      font-size: 2.2rem;
       margin-bottom: 1rem;
       font-weight: 600;
     }
@@ -75,10 +84,52 @@
       white-space: nowrap;
     }
 
+    .celebrate {
+      position: relative;
+      display: inline-block;
+      overflow: visible;
+      cursor: pointer;
+    }
+
+    .celebrate:hover {
+      animation: pop 0.45s ease;
+    }
+
+    @keyframes pop {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .spark {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 1;
+      transform: translate(-50%, -50%);
+      animation: burst 900ms ease-out forwards;
+    }
+
+    @keyframes burst {
+      from {
+        transform: translate(-50%, -50%) translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      to {
+        transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(0.2);
+        opacity: 0;
+      }
+    }
+
     @media (max-width: 767.98px) {
       .top-bar {
         padding: 0.9rem 1rem;
       }
+
       .page-content {
         padding: 1.8rem 1rem;
       }
@@ -103,13 +154,19 @@
   </header>
 
   <main class="page-content">
-    <h1>News</h1>
+    <h1 class="page-title">News</h1>
 
     <ul class="news-list">
+
+      <li class="news-item">
+        <span class="news-date">March 2026</span>
+        <strong id="defense-line" class="celebrate">And happened it did!</strong> 🥳
+        Feel free to check out <a href="files/presentations/dissertation-slides.pdf">my defense slides</a>, and please reach out if you have any questions or suggestions.
+      </li>
+
       <li class="news-item">
         <span class="news-date">October 2025</span>
-        It is happening: I’m defending my dissertation on Friday, March 13 at 12am!<br>
-        <strong>And happened it did!</strong> 🥳 Feel free to check out <a href="files/presentations/dissertation-slides.pdf">my defense slides</a>, and please reach out if you have any questions or suggestions.
+        It is happening: I’m defending my dissertation on Friday, March 13 at 12am!
       </li>
 
       <li class="news-item">
@@ -121,19 +178,19 @@
 
       <li class="news-item">
         <span class="news-date">May 2025</span>
-        I gave my first invited talk at the Thirteenth North American Phonology Conference (<a href="https://sites.google.com/view/naphcxiii">NAPhC</a>).
+        I gave my first invited talk at the Thirteenth North American Phonology Conference
+        (<a href="https://sites.google.com/view/naphcxiii">NAPhC</a>).
         <a href="files/presentations/NAPHC_2025-invited.pdf">[slides]</a>
       </li>
 
       <li class="news-item">
         <span class="news-date">Nov 2024</span>
-        <a href="files/posters/AMP2024.pdf">Poster</a> at AMP with Jeffrey Heinz. 
-    
+        <a href="files/posters/AMP2024.pdf">Poster</a> at AMP with Jeffrey Heinz.
       </li>
 
       <li class="news-item">
         <span class="news-date">January 2024</span>
-        I presented at the <a href="files/presentations/organized-LSA.pdf"> LSA organized session</a> on Formal Lnaguage Theory in Phonology and Morphology.
+        I presented at the <a href="files/presentations/organized-LSA.pdf">LSA organized session</a> on Formal Language Theory in Phonology and Morphology.
         <a href="files/presentations/Markowska-LSA.pdf">[slides]</a>
       </li>
 
@@ -171,8 +228,7 @@
 
       <li class="news-item">
         <span class="news-date">June 2022</span>
-        See you at
-        <a href="https://ml-la.github.io/nasslli2022/">NASSLLI 2022</a>!
+        See you at <a href="https://ml-la.github.io/nasslli2022/">NASSLLI 2022</a>!
       </li>
 
       <li class="news-item">
@@ -201,8 +257,8 @@
 
       <li class="news-item">
         <span class="news-date">June 2021</span>
-        I started working on a new project on how language signals cognitive state (PI:
-        <a href="https://owenrambow.com">Owen Rambow</a>).
+        I started working on a new project on how language signals cognitive state
+        (PI: <a href="https://owenrambow.com">Owen Rambow</a>).
       </li>
 
       <li class="news-item">
@@ -210,7 +266,42 @@
         I taught a session on finite-state transducers at the Summer Youth Camp for Computational Linguistics
         <a href="https://calendar.stonybrook.edu/site/iacs/event/summer-youth-camp-for-computational-linguistics-syccl-1/">(SYCCL)</a>.
       </li>
+
     </ul>
   </main>
+
+  <script>
+    const defenseLine = document.getElementById("defense-line");
+
+    function makeBurst() {
+      const colors = ["#f59e0b", "#ef4444", "#10b981", "#3b82f6", "#a855f7"];
+
+      for (let i = 0; i < 18; i++) {
+        const spark = document.createElement("span");
+        spark.className = "spark";
+        spark.style.backgroundColor = colors[i % colors.length];
+
+        const angle = (Math.PI * 2 * i) / 18;
+        const distance = 28 + Math.random() * 24;
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance;
+
+        spark.style.setProperty("--x", `${x}px`);
+        spark.style.setProperty("--y", `${y}px`);
+
+        defenseLine.appendChild(spark);
+
+        spark.addEventListener("animationend", () => {
+          spark.remove();
+        });
+      }
+    }
+
+    defenseLine.addEventListener("click", makeBurst);
+
+    window.addEventListener("load", () => {
+      setTimeout(makeBurst, 400);
+    });
+  </script>
 </body>
 </html>
