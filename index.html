@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/jumbotron.css">
 
-  <!-- Simple custom layout + typography -->
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -23,6 +22,7 @@
     a {
       text-decoration: none;
     }
+
     a:hover {
       text-decoration: underline;
     }
@@ -39,13 +39,7 @@
     }
 
     .site-name {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin: 0;
-    }
-
-    .site-name {
-      font-size: 1.9rem;   /* bigger name */
+      font-size: 1.9rem;
       font-weight: 600;
       margin: 0;
     }
@@ -56,7 +50,7 @@
       padding: 0;
       display: flex;
       gap: 1.1rem;
-      font-size: 1.1rem;   /* bigger CV / Publications / News / Contact */
+      font-size: 1.1rem;
     }
 
     .top-nav li {
@@ -73,27 +67,20 @@
       margin: 0 auto;
     }
 
-  	.hero-text h1 {
-  	  font-size: 2.4rem;    /* bigger main greeting */
-  	  font-weight: 600;
-  	  margin-bottom: 0.5rem;
-  	}
+    .hero-text h1 {
+      font-size: 2.4rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
 
-  	.hero-text .tagline {
-  	  font-size: 1.15rem;   /* larger subtitle line */
-  	  color: #4b5563;
-  	  margin-bottom: 1.3rem;
-  	}
+    .hero-text .tagline {
+      font-size: 1.15rem;
+      color: #4b5563;
+      margin-bottom: 1.3rem;
+    }
 
     .hero-text p {
       margin-bottom: 0.85rem;
-    }
-
-    .hero-photo {
-      max-width: 90%;    /* a bit smaller than the column */
-      height: auto;      /* keep original aspect ratio */
-      display: block;
-      margin: 0 auto;    /* center it in the column */
     }
 
     .contact-block {
@@ -102,32 +89,399 @@
       color: #374151;
     }
 
+    /* Profile-photo swap */
+    .profile-photo-container {
+      position: relative;
+      width: 90%;
+      max-width: 430px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 18px;
+      cursor: pointer;
+      outline: none;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+      transition: transform 0.45s ease, box-shadow 0.45s ease;
+    }
+
+    .profile-photo-container:focus-visible {
+      box-shadow:
+        0 0 0 4px rgba(37, 99, 235, 0.25),
+        0 12px 30px rgba(0, 0, 0, 0.16);
+    }
+
+    .profile-photo {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: inherit;
+    }
+
+    /* This image establishes the container height. */
+    .profile-photo-normal {
+      position: relative;
+      z-index: 1;
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+      transition: opacity 0.6s ease, transform 0.8s ease, filter 0.6s ease;
+    }
+
+    /* This image sits directly on top of the original image. */
+    .profile-photo-graduation {
+      position: absolute;
+      z-index: 2;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0;
+      transform: scale(1.1);
+      filter: blur(7px) brightness(1.1) saturate(1.15);
+      transition: opacity 0.6s ease, transform 0.9s ease, filter 0.6s ease;
+    }
+
+    .profile-photo-container:hover,
+    .profile-photo-container:focus,
+    .profile-photo-container:focus-visible {
+      transform: scale(1.035);
+      box-shadow:
+        0 22px 55px rgba(0, 0, 0, 0.28),
+        0 0 38px rgba(255, 193, 7, 0.32);
+    }
+
+    .profile-photo-container:hover .profile-photo-normal,
+    .profile-photo-container:focus .profile-photo-normal,
+    .profile-photo-container:focus-visible .profile-photo-normal {
+      opacity: 0;
+      transform: scale(0.96);
+      filter: blur(5px);
+    }
+
+    .profile-photo-container:hover .profile-photo-graduation,
+    .profile-photo-container:focus .profile-photo-graduation,
+    .profile-photo-container:focus-visible .profile-photo-graduation {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0) brightness(1.02) saturate(1.08);
+    }
+
+    .graduation-message {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      bottom: 18px;
+      padding: 0.55rem 1rem;
+      color: #ffffff;
+      background: rgba(17, 24, 39, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 700;
+      white-space: nowrap;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 0;
+      transform: translate(-50%, 18px) scale(0.85);
+      transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s;
+    }
+
+    .profile-photo-container:hover .graduation-message,
+    .profile-photo-container:focus .graduation-message,
+    .profile-photo-container:focus-visible .graduation-message {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
+
+    /* Full-screen fireworks. JavaScript adds .show-fireworks to body. */
+    .graduation-fireworks {
+      position: fixed;
+      z-index: 9999;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s ease;
+    }
+
+    body.show-fireworks .graduation-fireworks {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .firework {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ffffff;
+      opacity: 0;
+      transform: scale(0.05);
+      box-shadow:
+        0 -45px 0 2px #ff2d55,
+        18px -41px 0 1px #ffcc00,
+        34px -29px 0 2px #ff9500,
+        44px -9px 0 1px #34c759,
+        42px 17px 0 2px #00c7be,
+        29px 36px 0 1px #32ade6,
+        8px 45px 0 2px #0a84ff,
+        -16px 42px 0 1px #5e5ce6,
+        -35px 30px 0 2px #bf5af2,
+        -45px 8px 0 1px #ff375f,
+        -42px -17px 0 2px #ff9f0a,
+        -28px -36px 0 1px #ffd60a,
+        0 -75px 0 0 #ffffff,
+        38px -65px 0 1px #ff2d55,
+        65px -38px 0 0 #ffcc00,
+        75px 0 0 1px #34c759,
+        65px 38px 0 0 #64d2ff,
+        38px 65px 0 1px #0a84ff,
+        0 75px 0 0 #bf5af2,
+        -38px 65px 0 1px #ff375f,
+        -65px 38px 0 0 #ff9f0a,
+        -75px 0 0 1px #ffd60a,
+        -65px -38px 0 0 #30d158,
+        -38px -65px 0 1px #64d2ff;
+    }
+
+    body.show-fireworks .firework {
+      animation: websiteFirework 1.45s ease-out infinite;
+    }
+
+    .firework-1 { top: 15%; left: 10%; }
+    .firework-2 { top: 20%; left: 48%; animation-delay: 0.18s !important; }
+    .firework-3 { top: 14%; right: 10%; animation-delay: 0.36s !important; }
+    .firework-4 { top: 48%; left: 22%; animation-delay: 0.54s !important; }
+    .firework-5 { top: 50%; right: 17%; animation-delay: 0.72s !important; }
+    .firework-6 { bottom: 17%; left: 9%; animation-delay: 0.9s !important; }
+    .firework-7 { bottom: 13%; left: 52%; animation-delay: 1.08s !important; }
+    .firework-8 { bottom: 19%; right: 8%; animation-delay: 1.26s !important; }
+
+    @keyframes websiteFirework {
+      0% {
+        opacity: 0;
+        transform: scale(0.03) rotate(0deg);
+        filter: brightness(2);
+      }
+      12% { opacity: 1; }
+      52% {
+        opacity: 1;
+        transform: scale(1) rotate(18deg);
+        filter: brightness(1.3);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.75) rotate(42deg);
+        filter: brightness(0.9);
+      }
+    }
+
+    /* Personal section */
+    .personal-section {
+      max-width: 1050px;
+      margin: 3rem auto 0;
+      padding-top: 2rem;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .personal-section h2 {
+      font-size: 1.65rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    .personal-section p {
+      margin-bottom: 0.9rem;
+    }
+
+    /* Pet previews: photo plus a visible note */
+    .pet-link {
+      position: relative;
+      display: inline-block;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 1px dotted currentColor;
+      outline: none;
+    }
+
+    .pet-link:hover,
+    .pet-link:focus,
+    .pet-link:focus-visible {
+      text-decoration: none;
+    }
+
+    .pet-link:focus-visible {
+      border-radius: 4px;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.22);
+    }
+
+    .pet-preview {
+      position: absolute;
+      z-index: 20;
+      left: 50%;
+      bottom: calc(100% + 14px);
+      width: 250px;
+      padding: 8px 8px 10px;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 22px;
+      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.24);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateX(-50%) translateY(10px) scale(0.88);
+      transform-origin: bottom center;
+      transition:
+        opacity 0.22s ease,
+        transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+        visibility 0s linear 0.28s;
+    }
+
+    .pet-preview::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -8px;
+      width: 16px;
+      height: 16px;
+      background: #ffffff;
+      border-right: 1px solid #d1d5db;
+      border-bottom: 1px solid #d1d5db;
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    .pet-preview img {
+      display: block;
+      width: 100%;
+      height: 218px;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+
+    .pet-note {
+      position: relative;
+      z-index: 1;
+      display: block;
+      margin-top: 8px;
+      padding: 0.45rem 0.55rem 0.25rem;
+      color: #374151;
+      font-size: 0.88rem;
+      font-weight: 500;
+      line-height: 1.35;
+      text-align: center;
+      white-space: normal;
+    }
+
+    .pet-link:hover .pet-preview,
+    .pet-link:focus .pet-preview,
+    .pet-link:focus-visible .pet-preview {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0) scale(1);
+      transition-delay: 0s;
+    }
+
+    .charity-list {
+      margin: 0.5rem 0 0;
+      padding-left: 1.25rem;
+    }
+
+    .charity-list li {
+      margin-bottom: 0.65rem;
+    }
+
     /* Small screens */
     @media (max-width: 767.98px) {
       .top-bar {
         padding: 0.9rem 1rem;
       }
+
       .main-content {
         padding: 1.8rem 1rem;
       }
+
       .hero-text {
         margin-bottom: 1.5rem;
       }
+
       .hero-text h1 {
         font-size: 1.7rem;
+      }
+
+      .profile-photo-container {
+        width: 100%;
+        max-width: 390px;
+      }
+
+      .graduation-message {
+        bottom: 12px;
+        font-size: 0.9rem;
+      }
+
+      .personal-section {
+        margin-top: 2rem;
+      }
+
+      .pet-preview {
+        width: min(230px, calc(100vw - 32px));
+      }
+
+      .pet-preview img {
+        height: 195px;
+      }
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      .profile-photo,
+      .profile-photo-container,
+      .graduation-message {
+        transition-duration: 0.01ms;
+      }
+
+      .graduation-fireworks {
+        display: none;
+      }
+
+      .pet-link:hover .pet-preview,
+      .pet-link:focus .pet-preview,
+      .pet-link:focus-visible .pet-preview {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0) scale(1);
+        filter: none;
+        animation: none;
+      }
+
+      .pet-preview::before,
+      .pet-preview::after {
+        display: none;
       }
     }
   </style>
 </head>
 
 <body>
+  <!-- Full-screen fireworks shown only while the profile photo is active -->
+  <div class="graduation-fireworks" aria-hidden="true">
+    <span class="firework firework-1"></span>
+    <span class="firework firework-2"></span>
+    <span class="firework firework-3"></span>
+    <span class="firework firework-4"></span>
+    <span class="firework firework-5"></span>
+    <span class="firework firework-6"></span>
+    <span class="firework firework-7"></span>
+    <span class="firework firework-8"></span>
+  </div>
+
   <!-- Top navigation -->
   <header class="top-bar">
     <h1 class="site-name">
       <a href="index.html">Magdalena Markowska</a>
     </h1>
 
-    <nav>
+    <nav aria-label="Primary navigation">
       <ul class="top-nav">
         <li><a href="files/cv/CV.pdf">CV</a></li>
         <li><a href="publications.html">Publications</a></li>
@@ -137,47 +491,156 @@
     </nav>
   </header>
 
-  <!-- Main: ONLY intro + photo -->
   <main class="main-content">
+    <!-- Introduction and portrait -->
     <section id="about" class="hero row align-items-center">
       <div class="col-md-7 hero-text">
         <h1>Hello! This is Magda.</h1>
-        <div class="tagline">
-          PhD candidate in Linguistics · Computational linguistics · Interpretable language models
-        </div>
 
-        <p>
-          I’m a PhD candidate in <a href="https://www.linguistics.stonybrook.edu">Linguistics</a> at
-          <a href="https://www.stonybrook.edu">Stony Brook University</a>, affiliated with the
-          <a href="https://www.stonybrook.edu/commcms/iacs/index.php">
-            Institute for Advanced Computational Science (IACS)
-          </a>.
-          I work on computational linguistics, with a focus on interpretable, linguistically-informed models of language. My main advisor is <a href="http://jeffreyheinz.net">Jeffrey Heinz</a>, and I also frequently collaborate with <a href="http://owenrambow.com">Owen Rambow</a>.
-        </p>
+    <div class="tagline">
+      Postdoctoral Research Fellow · Computational Linguistics · Phonology · Interpretable AI
+    </div>
 
-        <p>
-          In my dissertation, I develop and test learners that acquire phonological processes from small data
-          by incorporating phonological features, tiers, and complexity bounds.
-        </p>
+    <p>
+      I am a <strong>Postdoctoral Research Fellow</strong> at
+      <a href="https://www.surrey.ac.uk/">University of Surrey</a>, where I work on the
+      <a href="https://revoluphon.github.io/"><strong>REVOLUPHON</strong></a>
+      project led by
+      <a href="https://www.surrey.ac.uk/people/erich-round">Erich Round</a>.
+      I received my PhD in
+      <a href="https://www.linguistics.stonybrook.edu">Linguistics</a>
+      from
+      <a href="https://www.stonybrook.edu">Stony Brook University</a>, where I was advised by
+      <a href="http://jeffreyheinz.net">Jeffrey Heinz</a>. I also collaborated closely with
+      <a href="http://owenrambow.com">Owen Rambow</a>, and was affiliated with the
+      <a href="https://www.stonybrook.edu/commcms/iacs/index.php">Institute for Advanced Computational Science (IACS)</a>.
+    </p>
 
-        <p>
-          I have also worked on modeling cognitive states, particularly belief and common ground, including
-          developing a manual for annotating common ground updates in dialogue. I have done fieldwork on the
-          Grassfields Bantu language Shupamem, focusing on lexical and grammatical tone and their interaction.
-        </p>
+    <p>
+      My research combines computational linguistics, phonology, and machine learning to develop interpretable models of language learning. Drawing on insights from grammatical inference, formal language theory, and phonological theory, I design learners that directly incorporate structured phonological representations, enabling them to generalize from sparse data.
+    </p>
+
+    <p>
+      I have also worked on computational pragmatics, modeling belief and common ground in dialogue, and on the documentation and computational analysis of tonal processes of the Grassfields Bantu language Shupamem.
+    </p>
+
 
         <div class="contact-block">
-          Email: <strong>magdalena.markowska</strong> &lt;at&gt; <strong>stonybrook</strong> &lt;dot&gt; <strong>edu</strong>
+          Email:
+          <strong>magdalena.markowska</strong>
+          &lt;at&gt;
+          <strong>stonybrook</strong>
+          &lt;dot&gt;
+          <strong>edu</strong>
         </div>
       </div>
 
       <div class="col-md-5">
-        <img
-          src="files/me.heic"
-          alt="Portrait of Magdalena Markowska"
-          class="hero-photo img-fluid">
+        <div
+          class="profile-photo-container"
+          tabindex="0"
+          aria-label="Hover or focus to see Magdalena's graduation photo">
+
+          <img
+            src="files/me.heic"
+            alt="Portrait of Magdalena Markowska"
+            class="profile-photo profile-photo-normal">
+
+          <img
+            src="files/me-graduated.jpeg"
+            alt="Magdalena Markowska celebrating her graduation with her dog"
+            class="profile-photo profile-photo-graduation">
+
+          <div class="graduation-message" aria-hidden="true">
+            I graduated! 🎓
+          </div>
+        </div>
       </div>
     </section>
+
+    <!-- Personal interests and recommended charities -->
+    <section class="personal-section" aria-labelledby="beyond-research-heading">
+      <h2 id="beyond-research-heading">Beyond research</h2>
+
+      <p>
+        Outside linguistics, I try to be a good pet mama:
+
+        <span class="pet-link" tabindex="0">
+          Tortellini
+          <span class="pet-preview" role="tooltip">
+            <img
+              src="files/tortellini.HEIC"
+              alt="Tortellini">
+            <span class="pet-note">Former member of the Brooklyn Cats gang.</span>
+          </span>
+        </span>,
+
+        <span class="pet-link" tabindex="0">
+          Frankie
+          <span class="pet-preview" role="tooltip">
+            <img
+              src="files/frankie.heic"
+              alt="Frankie">
+            <span class="pet-note">Named after Suicide’s haunting song “Frankie Teardrop.”</span>
+          </span>
+        </span>
+
+        and
+
+        <span class="pet-link" tabindex="0">
+          Simone
+          <span class="pet-preview" role="tooltip">
+            <img
+              src="files/simone.jpg"
+              alt="Simone">
+            <span class="pet-note">Possibly the reincarnated soul of Simone de Beauvoir.</span>
+          </span>
+        </span>.
+
+        Hover over their names to meet them.
+      </p>
+
+      <p>
+        I love music and film. I'm especially drawn to works that blur the boundaries between the familiar and the uncanny, inviting us to see the world from unexpected perspectives. Artists I feel particularly connected to include David Lynch, Martin Rev and Suicide, Devendra Banhart, and Joy Division.
+      </p>
+
+      <p>
+        I believe that we all share a responsibility to care for one another,
+        support vulnerable communities, and protect the other living beings
+        with whom we share the planet. Here are two organizations whose work I
+        encourage others to explore and support:
+      </p>
+
+      <ul class="charity-list">
+        <li>
+          <a href="https://www.children.org/" target="_blank" rel="noopener noreferrer">
+            Children International
+          </a>
+        </li>
+
+        <li>
+          <a href="https://www.animalaidunlimited.org/" target="_blank" rel="noopener noreferrer">
+            Animal Aid Unlimited
+          </a>
+        </li>
+      </ul>
+    </section>
   </main>
+
+  <script>
+    (() => {
+      const profilePhoto = document.querySelector('.profile-photo-container');
+
+      if (!profilePhoto) return;
+
+      const showFireworks = () => document.body.classList.add('show-fireworks');
+      const hideFireworks = () => document.body.classList.remove('show-fireworks');
+
+      profilePhoto.addEventListener('mouseenter', showFireworks);
+      profilePhoto.addEventListener('mouseleave', hideFireworks);
+      profilePhoto.addEventListener('focus', showFireworks);
+      profilePhoto.addEventListener('blur', hideFireworks);
+    })();
+  </script>
 </body>
 </html>
